@@ -1,401 +1,252 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#08111f">
-<meta name="description" content="MyChess64 – Learn. Play. Improve. Anytime, Anywhere.">
-<title>MyChess64 – Learn. Play. Improve. Anytime, Anywhere.</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f5f2ea">
+<meta name="description" content="MyChess64 — Play, Learn, Teach.">
+<title>MyChess64 — Play · Learn · Teach</title>
 <style>
 :root{
-  --bg:#07111f;
-  --bg2:#0c1c30;
-  --panel:rgba(16,31,51,.78);
-  --text:#f7f9fc;
-  --muted:#aebbd0;
-  --gold:#f5b942;
-  --gold2:#ffd36b;
-  --light:#f0d9b5;
-  --dark:#b58863;
-  --blue:#1e5fae;
-  --line:rgba(255,255,255,.1);
-  --shadow:0 24px 70px rgba(0,0,0,.42);
+ --cream:#f5f2ea;--paper:#fffdf8;--ink:#18202a;--muted:#737b83;
+ --line:#dedbd2;--gold:#bd8e38;--gold2:#e2c27e;--navy:#18222d;
+ --green:#53755c;--blue:#59728a;
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{
-  margin:0; min-height:100vh; color:var(--text);
-  font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
-  background:
-    radial-gradient(900px 600px at 10% -10%,#173b67 0,transparent 65%),
-    radial-gradient(800px 600px at 100% 100%,#132f50 0,transparent 60%),
-    linear-gradient(145deg,var(--bg),var(--bg2));
-}
-body:before{
-  content:"";position:fixed;inset:0;pointer-events:none;opacity:.35;
-  background-image:radial-gradient(rgba(255,255,255,.08) 1px,transparent 1px);
-  background-size:28px 28px;
+ margin:0;background:var(--cream);color:var(--ink);
+ font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+ overflow-x:hidden;
 }
 a{color:inherit;text-decoration:none}
-button,a{ -webkit-tap-highlight-color:transparent }
-:focus-visible{outline:3px solid var(--gold2);outline-offset:4px}
+.bg{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+.bg:after{
+ content:"";position:absolute;inset:0;
+ background:linear-gradient(90deg,rgba(245,242,234,.95) 0%,rgba(245,242,234,.74) 43%,rgba(245,242,234,.87) 100%);
+}
+.bg-piece{
+ position:absolute;opacity:.065;filter:grayscale(1) contrast(.75);
+ transform:rotate(-8deg);animation:float 12s ease-in-out infinite alternate;
+}
+.bg-piece:nth-child(2n){animation-delay:-3s;transform:rotate(7deg)}
+.bg-piece:nth-child(3n){animation-delay:-6s;transform:rotate(-14deg)}
+@keyframes float{from{translate:0 0}to{translate:0 -18px}}
+.page{position:relative;z-index:1;max-width:1240px;margin:auto;padding:0 30px 60px}
+.nav{height:78px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:11px;font-weight:950;font-size:20px;letter-spacing:-.04em}
+.mark{width:38px;height:38px;border-radius:11px;background:var(--navy);color:#fff;display:grid;place-items:center;font-size:22px;box-shadow:0 8px 22px #18222d1c}
+.nav-links{display:flex;gap:4px}
+.nav-links a{padding:9px 13px;border-radius:9px;font-size:10px;font-weight:900;letter-spacing:.13em;text-transform:uppercase;color:#747c84}
+.nav-links a:hover{background:#18222d08;color:var(--ink)}
 
-/* Header */
-header{
-  position:relative;z-index:2;
-  width:min(1240px,calc(100% - 32px));margin:auto;
-  padding:22px 0 10px;
-  display:flex;align-items:center;justify-content:space-between;gap:20px;
-}
-.brand{display:flex;align-items:center;gap:13px}
-.mark{
-  width:48px;height:48px;border-radius:14px;
-  display:grid;place-items:center;
-  background:linear-gradient(145deg,#fff,#dfe8f3);
-  color:#08111f;font:700 31px Georgia,serif;
-  box-shadow:0 9px 26px rgba(0,0,0,.3);
-}
-.brand-name{font:800 22px/1 Georgia,serif;letter-spacing:.2px}
-.brand-tag{margin-top:4px;color:var(--muted);font-size:11px;letter-spacing:1.4px;text-transform:uppercase}
-.header-badge{
-  padding:9px 13px;border:1px solid var(--line);border-radius:999px;
-  color:#dbe7f8;background:rgba(255,255,255,.045);font-size:12px;font-weight:700;
-}
+.hero{min-height:calc(100vh - 78px);display:grid;place-items:center;text-align:center;padding:72px 0 78px;position:relative}
+.hero-inner{max-width:850px}
+.eyebrow{display:inline-flex;align-items:center;gap:9px;color:var(--gold);font-size:10px;font-weight:950;letter-spacing:.23em;text-transform:uppercase;margin-bottom:22px}
+.eyebrow:before,.eyebrow:after{content:"";width:28px;height:1px;background:var(--gold)}
+h1{margin:0;font:900 clamp(58px,9vw,112px)/.82 Georgia,"Times New Roman",serif;letter-spacing:-.075em;color:var(--navy)}
+h1 span{display:block;color:var(--gold)}
+.hero-copy{max-width:610px;margin:27px auto 0;color:var(--muted);font-size:16px;line-height:1.75}
+.actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:29px}
+.btn{height:50px;padding:0 21px;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;gap:8px;font-size:11px;font-weight:950;letter-spacing:.07em;transition:.2s}
+.btn-main{background:var(--navy);color:#fff;box-shadow:0 12px 28px #18222d20}
+.btn-main:hover{background:#263544;transform:translateY(-2px)}
+.btn-alt{border:1px solid #cfcac0;background:#ffffff80;color:var(--navy)}
+.btn-alt:hover{transform:translateY(-2px);background:#fff}
+.stats{display:flex;justify-content:center;gap:38px;margin-top:33px}
+.stats b{display:block;font:800 21px Georgia,serif;color:var(--navy)}
+.stats span{display:block;font-size:8px;font-weight:900;letter-spacing:.14em;text-transform:uppercase;color:#969ba0;margin-top:3px}
+.scroll{position:absolute;bottom:23px;left:50%;transform:translateX(-50%);font-size:8px;font-weight:900;letter-spacing:.18em;text-transform:uppercase;color:#9b9d9e}
+.scroll:after{content:"";display:block;width:1px;height:25px;background:#c8c5bd;margin:8px auto 0}
 
-/* Hero */
-main{position:relative;z-index:1;width:min(1240px,calc(100% - 32px));margin:auto}
-.hero{
-  min-height:calc(100vh - 94px);
-  display:grid;grid-template-columns:minmax(360px,.82fr) minmax(430px,1.18fr);
-  align-items:center;gap:58px;padding:35px 0 55px;
-}
-.eyebrow{
-  display:inline-flex;align-items:center;gap:8px;
-  color:var(--gold2);font-size:12px;font-weight:800;letter-spacing:2px;text-transform:uppercase;
-}
-.eyebrow:before{content:"";width:24px;height:2px;background:var(--gold)}
-h1{
-  margin:17px 0 16px;
-  font:800 clamp(43px,5.6vw,76px)/.96 Georgia,"Times New Roman",serif;
-  letter-spacing:-2.5px;
-}
-h1 span{color:var(--gold)}
-.hero-copy p{
-  max-width:560px;margin:0;color:var(--muted);
-  font-size:clamp(16px,1.7vw,19px);line-height:1.65;
-}
-.cta-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
-.cta{
-  display:inline-flex;align-items:center;justify-content:center;gap:9px;
-  min-height:48px;padding:0 20px;border-radius:13px;
-  font-size:14px;font-weight:800;transition:.2s ease;
-}
-.cta.primary{background:var(--gold);color:#101a26;box-shadow:0 9px 25px rgba(245,185,66,.22)}
-.cta.secondary{border:1px solid var(--line);background:rgba(255,255,255,.055)}
-.cta:hover{transform:translateY(-2px)}
-.mini-stats{display:flex;gap:24px;margin-top:30px}
-.stat strong{display:block;font-size:19px}.stat small{color:#8495ad;font-size:11px}
+.dashboard{padding:20px 0 70px}
+.intro{display:flex;justify-content:space-between;align-items:end;gap:20px;margin-bottom:22px}
+.intro h2{margin:0;font:900 40px/1 Georgia,serif;letter-spacing:-.055em;color:var(--navy)}
+.intro p{margin:0;color:var(--muted);font-size:11px}
+.categories{display:grid;grid-template-columns:1.12fr 1.12fr .76fr;gap:12px;align-items:stretch}
+.category{background:rgba(255,253,248,.82);border:1px solid var(--line);border-radius:20px;padding:21px;box-shadow:0 8px 30px #18222d08;backdrop-filter:blur(8px)}
+.category.play{border-top:3px solid var(--gold)}
+.category.learn{border-top:3px solid var(--blue)}
+.category.teach{border-top:3px solid var(--green)}
+.cat-head{display:flex;justify-content:space-between;align-items:start;gap:12px;margin-bottom:17px}
+.cat-number{display:block;color:#a4a7aa;font-size:11px;font-weight:950;letter-spacing:.16em}
+.cat-head h2{margin:5px 0 0;font:900 32px Georgia,serif;letter-spacing:-.045em}
+.cat-head p{margin:18px 0 0;color:#8a9095;font-size:12px;text-align:right;font-weight:700}
+.tools{display:grid;gap:7px}
+.tool{min-height:86px;border:1px solid #e3e0d9;border-radius:14px;background:#fffefa;display:grid;grid-template-columns:54px 1fr 24px;align-items:center;gap:15px;padding:12px 14px;transition:.18s}
+.tool:hover{transform:translateY(-2px);border-color:#c9b47e;box-shadow:0 8px 20px #18222d0b}
+.tool-icon{width:54px;height:54px;border-radius:14px;background:#f0ede6;display:grid;place-items:center;color:var(--navy);font-size:25px;font-weight:950}
+.play .tool:first-child .tool-icon,.play .tool:last-child .tool-icon{background:#f0e5ce;color:#9b702d}
+.learn .tool:nth-child(1) .tool-icon{background:#e9eef1;color:#526e86}
+.teach .tool-icon{background:#e9eee9;color:#507158}
+.tool-text b{display:block;font-size:16px;line-height:1.2;letter-spacing:-.01em}
+.tool-text small{display:block;color:#92979c;font-size:12px;margin-top:6px}
+.arrow{font-size:20px;color:#a4a7a9;text-align:right}
+.tool:hover .arrow{color:var(--gold)}
 
-/* Board hero */
-.board-wrap{position:relative;max-width:650px;margin:auto;width:100%}
-.board-glow{
-  position:absolute;inset:7%;background:var(--gold);filter:blur(65px);opacity:.13;z-index:-1;
-}
-.board{
-  position:relative;display:grid;grid-template-columns:repeat(8,1fr);
-  aspect-ratio:1;border:10px solid #c48b2b;border-radius:20px;overflow:hidden;
-  box-shadow:var(--shadow),0 0 0 1px rgba(255,255,255,.08);
-  background:#222;
-}
-.square{display:grid;place-items:center;position:relative;aspect-ratio:1}
-.square.light{background:var(--light)}.square.dark{background:var(--dark)}
-.piece{
-  font-family:"Times New Roman",Georgia,serif;
-  font-size:clamp(31px,5vw,55px);line-height:1;
-  user-select:none;filter:drop-shadow(0 3px 1px rgba(0,0,0,.28));
-}
-.white{color:#fff;text-shadow:0 2px 0 #202020,0 4px 5px rgba(0,0,0,.28)}
-.black{color:#181818;text-shadow:0 1px 0 #777,0 3px 4px rgba(0,0,0,.25)}
-.coords{
-  position:absolute;font:700 9px/1 Inter,Arial,sans-serif;opacity:.6;
-}
-.rank{left:5px;top:4px}.file{right:5px;bottom:4px}
-.light .coords{color:#7b5335}.dark .coords{color:#f7e5cc}
-.board-caption{
-  position:absolute;right:-18px;bottom:22px;
-  padding:12px 15px;border:1px solid rgba(255,255,255,.14);
-  border-radius:14px;background:rgba(8,17,31,.88);backdrop-filter:blur(12px);
-  box-shadow:0 15px 35px rgba(0,0,0,.35);
-}
-.board-caption b{display:block;font-size:13px}.board-caption small{color:var(--muted);font-size:11px}
+.quote{margin-top:13px;border-radius:18px;background:var(--navy);color:#fff;padding:27px 30px;display:flex;justify-content:space-between;align-items:center;gap:20px;position:relative;overflow:hidden}
+.quote:after{content:"♟";position:absolute;right:6%;top:-35px;font:180px Georgia,serif;color:#fff;opacity:.035;transform:rotate(10deg)}
+.quote strong{font:800 23px Georgia,serif;position:relative;z-index:1}
+.quote span{display:block;color:#9ca6b0;font-size:10px;margin-top:5px;position:relative;z-index:1}
+.quote a{position:relative;z-index:1;background:var(--gold2);color:var(--navy);padding:12px 16px;border-radius:9px;font-size:9px;font-weight:950;letter-spacing:.07em;white-space:nowrap}
 
-/* Tools */
-.tools{padding:15px 0 70px}
-.section-head{display:flex;align-items:end;justify-content:space-between;gap:20px;margin-bottom:18px}
-.section-head h2{margin:0;font:700 28px Georgia,serif}
-.section-head p{margin:0;color:#8293aa;font-size:13px}
-.grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
-.card{
-  position:relative;min-height:178px;padding:18px;border-radius:18px;
-  border:1px solid var(--line);background:var(--panel);backdrop-filter:blur(12px);
-  overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;
-  transition:.2s ease;
-}
-.card:before{
-  content:"";position:absolute;right:-30px;top:-35px;width:100px;height:100px;
-  border-radius:50%;background:var(--gold);opacity:.06;
-}
-.card:hover{transform:translateY(-4px);border-color:rgba(245,185,66,.42);box-shadow:0 18px 38px rgba(0,0,0,.25)}
-.icon{font:400 39px Georgia,serif;color:var(--gold2);line-height:1}
-.card h3{margin:12px 0 5px;font:700 17px/1.1 Georgia,serif}
-.card p{margin:0;color:#91a0b5;font-size:12px;line-height:1.45}
-.card .go{align-self:flex-start;margin-top:14px;color:var(--gold2);font-size:11px;font-weight:800}
-.card .go:after{content:"  →"}
-.featured{background:linear-gradient(145deg,rgba(245,185,66,.13),rgba(16,31,51,.8));border-color:rgba(245,185,66,.3)}
-footer{
-  position:relative;z-index:1;border-top:1px solid var(--line);
-  width:min(1240px,calc(100% - 32px));margin:auto;
-  padding:20px 0 25px;display:flex;justify-content:space-between;gap:15px;
-  color:#74859c;font-size:11px;
-}
-footer b{color:#dbe5f2}
+.footer{border-top:1px solid var(--line);padding-top:20px;display:flex;justify-content:space-between;color:#92979b;font-size:9px;font-weight:900;letter-spacing:.1em;text-transform:uppercase}
 
-/* Responsive */
 @media(max-width:1050px){
-  .hero{grid-template-columns:1fr;gap:42px;padding-top:25px}
-  .hero-copy{text-align:center}.hero-copy p{margin:auto}.eyebrow{justify-content:center}
-  .cta-row,.mini-stats{justify-content:center}
-  .board-wrap{width:min(680px,100%)}
-  .grid{grid-template-columns:repeat(3,1fr)}
+ .hero{min-height:auto;padding:65px 0 80px}
+ .categories{grid-template-columns:1fr 1fr}
+ .category.teach{grid-column:1/-1}
 }
 @media(max-width:680px){
-  header{padding-top:15px}.header-badge{display:none}
-  .hero{min-height:auto;padding:35px 0 45px;gap:32px}
-  h1{font-size:clamp(42px,13vw,60px);letter-spacing:-1.8px}
-  .hero-copy p{font-size:15px}
-  .board{border-width:6px;border-radius:13px}
-  .board-caption{right:8px;bottom:8px;padding:9px 11px}
-  .board-caption small{font-size:10px}
-  .grid{grid-template-columns:repeat(2,1fr)}
-  .card{min-height:155px;padding:15px}
-  .section-head{display:block}.section-head p{margin-top:5px}
+ .page{padding:0 15px 40px}
+ .nav{height:65px}
+ .nav-links{display:none}
+ .hero{padding:55px 0 72px}
+ h1{font-size:clamp(55px,17vw,78px)}
+ .hero-copy{font-size:14px;line-height:1.65}
+ .stats{gap:22px}
+ .dashboard{padding-top:5px}
+ .intro{display:block}
+ .intro h2{font-size:30px}
+ .intro p{margin-top:7px}
+ .categories{grid-template-columns:1fr}
+ .category.teach{grid-column:auto}
+ .category{padding:17px}
+ .quote{padding:22px;display:block}
+ .quote a{display:inline-flex;margin-top:16px}
 }
-@media(max-width:420px){
-  main,header,footer{width:min(100% - 22px,1240px)}
-  .brand-name{font-size:19px}.mark{width:43px;height:43px}
-  .grid{gap:9px}.card{min-height:145px}.card h3{font-size:15px}
-  .card p{font-size:11px}.icon{font-size:33px}
-  .mini-stats{gap:17px}
+@media(max-width:430px){
+ .hero{padding-top:45px}
+ .stats{gap:17px}
+ .stats b{font-size:18px}
+ .stats span{font-size:7px}
+ .footer{flex-direction:column;gap:8px}
 }
-@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+@media(prefers-reduced-motion:reduce){
+ html{scroll-behavior:auto}
+ *,*::before,*::after{animation:none!important;transition:none!important}
+}
 
-/* Lichess-style Cburnett pieces */
-.board .piece{
-  width:88%;
-  height:88%;
-  object-fit:contain;
-  display:block;
-  margin:auto;
-  line-height:1;
-  user-select:none;
-  -webkit-user-drag:none;
+/* Readability refinement */
+.tool-icon{
+  flex:0 0 auto;
+  box-shadow:inset 0 0 0 1px rgba(24,32,42,.045);
 }
-</style>
-<style>
-/* MyChess64 — enhanced Chess Tools icons */
-.tools .card .icon{
-  width:66px;height:66px;margin-bottom:18px;border-radius:18px;
-  display:grid;place-items:center;position:relative;overflow:hidden;
-  background:radial-gradient(circle at 30% 20%,rgba(255,255,255,.18),transparent 38%),
-             linear-gradient(145deg,rgba(245,185,66,.18),rgba(255,255,255,.035));
-  border:1px solid rgba(255,255,255,.12);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 12px 28px rgba(0,0,0,.24);
-  font-size:0;transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease;
-}
-.tools .card .icon:before{
-  content:"";position:absolute;width:46px;height:46px;border-radius:50%;
-  background:radial-gradient(circle,rgba(245,185,66,.20),transparent 68%);filter:blur(3px);
-}
-.tools .tool-piece{
-  width:54px;height:54px;display:grid;place-items:center;position:relative;z-index:1;
-  filter:drop-shadow(0 7px 5px rgba(0,0,0,.38));transition:transform .25s ease,filter .25s ease;
-}
-.tools .tool-piece img{width:100%;height:100%;object-fit:contain;display:block;user-select:none;-webkit-user-drag:none}
-.tools .card:hover .icon{
-  transform:translateY(-3px) scale(1.04);border-color:rgba(245,185,66,.45);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.1),0 16px 34px rgba(0,0,0,.3),0 0 24px rgba(245,185,66,.08);
-}
-.tools .card:hover .tool-piece{transform:translateY(-3px) scale(1.08);filter:drop-shadow(0 10px 7px rgba(0,0,0,.45))}
-.tools .card.featured .icon{
-  background:radial-gradient(circle at 30% 20%,rgba(255,255,255,.22),transparent 38%),
-             linear-gradient(145deg,rgba(245,185,66,.30),rgba(245,185,66,.06));
-  border-color:rgba(245,185,66,.34);
-}
-.tools .card.featured .tool-piece{width:57px;height:57px}
+.tool-text{min-width:0}
+.tool-text b{font-weight:900}
+.tool-text small{font-weight:600}
+.play .tool-icon{background:#eee8dc}
+.play .tool:first-child .tool-icon{background:#f0e0bd;color:#956c26}
+.play .tool:nth-child(2) .tool-icon{background:#ebe9e2;color:#27313d}
+.play .tool:nth-child(3) .tool-icon{background:#e8e9e5;color:#27313d}
+.play .tool:nth-child(4) .tool-icon{background:#f0e0bd;color:#956c26}
+.learn .tool-icon{background:#e7edf0;color:#304e65}
+.learn .tool:nth-child(2) .tool-icon{background:#ece8df;color:#27313d}
+.learn .tool:nth-child(3) .tool-icon{background:#e5ebee;color:#304e65}
+.learn .tool:nth-child(4) .tool-icon{background:#e9e6de;color:#27313d}
+.teach .tool-icon{background:#e6ece6;color:#47664f}
 @media(max-width:680px){
-  .tools .card .icon{width:58px;height:58px}.tools .tool-piece{width:48px;height:48px}
-  .tools .card.featured .tool-piece{width:51px;height:51px}
+  .cat-head h2{font-size:34px}
+  .cat-head p{font-size:12px}
+  .tool{min-height:92px;grid-template-columns:58px 1fr 24px;gap:15px;padding:13px 14px}
+  .tool-icon{width:58px;height:58px;border-radius:15px;font-size:27px}
+  .tool-text b{font-size:17px}
+  .tool-text small{font-size:12px;margin-top:6px}
+  .arrow{font-size:21px}
 }
-@media(prefers-reduced-motion:reduce){.tools .card .icon,.tools .tool-piece{transition:none}}
-</style>
-<style id="tool-dashboard-redesign">
-.tools .grid{gap:16px;align-items:stretch}
-.tools .card{
-position:relative;min-height:178px;padding:20px;display:flex;flex-direction:column;justify-content:space-between;
-gap:18px;overflow:hidden;border:1px solid rgba(255,255,255,.095);
-background:linear-gradient(145deg,rgba(255,255,255,.055),rgba(255,255,255,.018)),rgba(10,24,41,.68);
-box-shadow:0 14px 34px rgba(0,0,0,.20);
-transition:transform .25s ease,border-color .25s ease,box-shadow .25s ease
+@media(max-width:430px){
+  .tool{min-height:88px;grid-template-columns:54px 1fr 21px;padding:12px}
+  .tool-icon{width:54px;height:54px}
+  .tool-text b{font-size:16px}
+  .tool-text small{font-size:11px}
 }
-.tools .card:before{content:"";position:absolute;width:150px;height:150px;right:-75px;top:-80px;border-radius:50%;background:radial-gradient(circle,rgba(245,185,66,.12),transparent 68%);pointer-events:none}
-.tools .card:after{content:"";position:absolute;left:0;right:0;top:0;height:2px;background:linear-gradient(90deg,transparent,rgba(245,185,66,.55),transparent);opacity:0;transition:opacity .25s ease}
-.tools .card:hover{transform:translateY(-5px);border-color:rgba(245,185,66,.28);box-shadow:0 20px 42px rgba(0,0,0,.30),0 0 26px rgba(245,185,66,.045)}
-.tools .card:hover:after{opacity:1}
-.tools .card>div{display:flex;flex-direction:column;min-width:0}
-.tools .card .icon{
-width:58px;height:58px;margin:0 0 19px;border-radius:16px;display:flex;align-items:center;justify-content:center;
-position:relative;overflow:hidden;background:linear-gradient(145deg,rgba(245,185,66,.18),rgba(255,255,255,.035));
-border:1px solid rgba(245,185,66,.16);box-shadow:inset 0 1px 0 rgba(255,255,255,.09),0 9px 22px rgba(0,0,0,.22)
-}
-.tools .card .icon:before{content:"";position:absolute;width:44px;height:44px;border-radius:50%;background:radial-gradient(circle,rgba(245,185,66,.17),transparent 70%);filter:blur(3px)}
-.tools .tool-symbol{position:relative;z-index:1;color:#f7c65d;font-size:28px;line-height:1;font-weight:800;text-shadow:0 3px 9px rgba(0,0,0,.4);transition:transform .25s ease}
-.tools .tool-symbol-label{position:absolute;right:7px;bottom:6px;z-index:2;font-size:7px;line-height:1;letter-spacing:.8px;text-transform:uppercase;color:rgba(255,255,255,.34);font-weight:800}
-.tools .card h3{margin:0;font-size:17px;line-height:1.15;letter-spacing:-.2px}
-.tools .card p{margin:7px 0 0;max-width:235px;color:var(--muted);font-size:12px;line-height:1.5}
-.tools .card .go{align-self:flex-start;display:inline-flex;align-items:center;gap:7px;padding:7px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.035);color:#dce7f5;font-size:10px;font-weight:800;letter-spacing:.45px;transition:background .25s ease,border-color .25s ease,color .25s ease,transform .25s ease}
-.tools .card .go:after{content:"→";font-size:13px}
-.tools .card:hover .go{background:rgba(245,185,66,.11);border-color:rgba(245,185,66,.25);color:var(--gold2);transform:translateX(2px)}
-.tools .card:hover .tool-symbol{transform:scale(1.12) translateY(-1px)}
-.tools .card.featured{border-color:rgba(245,185,66,.25);background:radial-gradient(circle at 100% 0,rgba(245,185,66,.14),transparent 45%),linear-gradient(145deg,rgba(245,185,66,.13),rgba(255,255,255,.025)),rgba(10,24,41,.74)}
-.tools .card.featured .icon{background:linear-gradient(145deg,rgba(245,185,66,.30),rgba(245,185,66,.07));border-color:rgba(245,185,66,.35)}
-.tools .card.featured .tool-symbol{font-size:30px;color:#ffd66f}
-@media(max-width:680px){.tools .grid{gap:12px}.tools .card{min-height:158px;padding:16px}.tools .card .icon{width:52px;height:52px;margin-bottom:15px}.tools .tool-symbol{font-size:24px}.tools .card h3{font-size:15px}.tools .card p{font-size:11px;margin-top:5px}}
-@media(prefers-reduced-motion:reduce){.tools .card,.tools .card:after,.tools .card .go,.tools .tool-symbol{transition:none}}
+
+
+/* Final PLAY / LEARN / TEACH arrangement */
+.category.play .tools,
+.category.learn .tools,
+.category.teach .tools { grid-template-columns:1fr; }
+
+.category.play .tool:nth-child(1) .tool-icon,
+.category.play .tool:nth-child(2) .tool-icon { background:#f0e0bd;color:#956c26; }
+.category.play .tool:nth-child(3) .tool-icon { background:#ebe9e2;color:#27313d; }
+
+.category.learn .tool:nth-child(1) .tool-icon { background:#ece8df;color:#27313d; }
+.category.learn .tool:nth-child(2) .tool-icon { background:#e5ebee;color:#304e65; }
+.category.learn .tool:nth-child(3) .tool-icon { background:#e9e6de;color:#27313d; }
+.category.learn .tool:nth-child(4) .tool-icon { background:#e9eee9;color:#507158; }
+
+.category.teach .tool:nth-child(1) .tool-icon { background:#e9eef1;color:#526e86; }
+.category.teach .tool:nth-child(2) .tool-icon { background:#e9eee9;color:#507158; }
+.category.teach .tool:nth-child(3) .tool-icon { background:#e7e9e5;color:#27313d; }
+
 </style>
 </head>
 <body>
-<header>
-  <a class="brand" href="./" aria-label="MyChess64 Home">
-    <span class="mark">♞</span>
-    <span><span class="brand-name">MyChess64</span><span class="brand-tag">Learn · Play · Improve</span></span>
-  </a>
-  <span class="header-badge">♟ Chess • Training • Tools</span>
+<div class="bg" aria-hidden="true"><img class="bg-piece p0" src="https://cdn.jsdelivr.net/gh/lichess-org/lila@master/public/piece/cburnett/bK.svg" alt="" style="left:8%;top:18;width:142.5px"><img class="bg-piece p1" src="https://cdn.jsdelivr.net/gh/lichess-org/lila@master/public/piece/cburnett/wQ.svg" alt="" style="left:18%;top:70;width:112.5px"><img class="bg-piece p2" src="https://cdn.jsdelivr.net/gh/lichess-org/lila@master/public/piece/cburnett/bN.svg" alt="" style="left:31%;top:10;width:97.5px"><img class="bg-piece p3" src="https://cdn.jsdelivr.net/gh/lichess-org/lila@master/public/piece/cburnett/wR.svg" alt="" style="left:42%;top:78;width:135.0px"><img class="bg-piece p4" src="https://cdn.jsdelivr.net/gh/lichess-org/lila@master/public/piece/cburnett/bB.svg" alt="" style="left:54%;top:16;width:105.0px"><img class="bg-piece p5" src="https://cdn.jsdelivr.net/gh/lichess-org/lila@master/public/piece/cburnett/wN.svg" alt="" style="left:67%;top:70;width:112.5px"><img class="bg-piece p6" src="https://cdn.jsdelivr.net/gh/lichess-org/lila@master/public/piece/cburnett/bQ.svg" alt="" style="left:79%;top:12;width:150.0px"><img class="bg-piece p7" src="https://cdn.jsdelivr.net/gh/lichess-org/lila@master/public/piece/cburnett/wK.svg" alt="" style="left:91%;top:61;width:127.5px"><img class="bg-piece p8" src="https://cdn.jsdelivr.net/gh/lichess-org/lila@master/public/piece/cburnett/bR.svg" alt="" style="left:3%;top:72;width:97.5px"><img class="bg-piece p9" src="https://cdn.jsdelivr.net/gh/lichess-org/lila@master/public/piece/cburnett/wB.svg" alt="" style="left:87%;top:20;width:90.0px"><img class="bg-piece p10" src="https://cdn.jsdelivr.net/gh/lichess-org/lila@master/public/piece/cburnett/bP.svg" alt="" style="left:24%;top:40;width:75.0px"><img class="bg-piece p11" src="https://cdn.jsdelivr.net/gh/lichess-org/lila@master/public/piece/cburnett/wP.svg" alt="" style="left:74%;top:42;width:75.0px"></div>
+<div class="page">
+<header class="nav">
+ <a class="brand" href="./"><span class="mark">♞</span><span>MyChess64</span></a>
+ <nav class="nav-links"><a href="#play">Play</a><a href="#learn">Learn</a><a href="#teach">Teach</a></nav>
 </header>
 
 <main>
 <section class="hero">
-  <div class="hero-copy">
-    <div class="eyebrow">Your Chess Toolkit</div>
-    <h1>Learn.<br><span>Play.</span><br>Improve.</h1>
-    <p>Everything you need to explore chess, train your board vision, study openings and play better — anytime, anywhere.</p>
-    <div class="cta-row">
-      <a class="cta primary" href="https://vpsinhachess.github.io/playnow/" target="_blank" rel="noopener">♞ Play Now</a>
-      <a class="cta secondary" href="#tools">Explore Tools ↓</a>
-    </div>
-    <div class="mini-stats">
-      <div class="stat"><strong>64</strong><small>SQUARES</small></div>
-      <div class="stat"><strong>10+</strong><small>TOOLS</small></div>
-      <div class="stat"><strong>∞</strong><small>LEARNING</small></div>
-    </div>
+ <div class="hero-inner">
+  <div class="eyebrow">The modern chess playground</div>
+  <h1>PLAY.<span>LEARN.</span>TEACH.</h1>
+  <p class="hero-copy">One beautiful space for players, learners and chess coaches — with the tools you need, exactly where you need them.</p>
+  <div class="actions">
+   <a class="btn btn-main" href="https://vpsinhachess.github.io/playnow/">♞&nbsp; PLAY NOW</a>
+   <a class="btn btn-alt" href="#play">EXPLORE MYCHESS64&nbsp; ↓</a>
   </div>
-
-  <div class="board-wrap" aria-label="Chess board">
-    <div class="board-glow"></div>
-    <div class="board">
-      <div class="square light"><img class="piece black" src="https://cdn.jsdelivr.net/gh/lichess-org/lila@master/public/piece/cburnett/bR.svg" alt="Black Rook" draggable="false"><span class="coords rank">8</span></div>
-      <div class="square dark"><img class="piece black" src="https://cdn.jsdelivr.net/gh/lichess-org/lila@master/public/piece/cburnett/bN.svg" alt="Black Knight" draggable="false"></div>
-      <div class="square light"><img class="piece black" src="https://cdn.jsdelivr.net/gh/lichess-org/lila@master/public/piece/cburnett/bB.svg" alt="Black Bishop" draggable="false"></div>
-      <div class="square dark"><img class="piece black" src="https://cdn.jsdelivr.net/gh/lichess-org/lila@master/public/piece/cburnett/bQ.svg" alt="Black Queen" draggable="false"></div>
-      <div class="square light"><img class="piece black" src="https://cdn.jsdelivr.net/gh/lichess-org/lila@master/public/piece/cburnett/bK.svg" alt="Black King" draggable="false"></div>
-      <div class="square dark"><img class="piece black" src="https://cdn.jsdelivr.net/gh/lichess-org/lila@master/public/piece/cburnett/bB.svg" alt="Black Bishop" draggable="false"></div>
-      <div class="square light"><img class="piece black" src="https://cdn.jsdelivr.net/gh/lichess-org/lila@master/public/piece/cburnett/bN.svg" alt="Black Knight" draggable="false"></div>
-      <div class="square dark"><img class="piece black" src="https://cdn.jsdelivr.net/gh/lichess-org/lila@master/public/piece/cburnett/bR.svg" alt="Black Rook" draggable="false"><span class="coords rank">8</span></div>
-
-      <div class="square dark"><img class="piece black" src="https://cdn.jsdelivr.net/gh/lichess-org/lila@master/public/piece/cburnett/bP.svg" alt="Black Pawn" draggable="false"><span class="coords rank">7</span></div>
-      <div class="square light"><img class="piece black" src="https://cdn.jsdelivr.net/gh/lichess-org/lila@master/public/piece/cburnett/bP.svg" alt="Black Pawn" draggable="false"></div>
-      <div class="square dark"><img class="piece black" src="https://cdn.jsdelivr.net/gh/lichess-org/lila@master/public/piece/cburnett/bP.svg" alt="Black Pawn" draggable="false"></div>
-      <div class="square light"><img class="piece black" src="https://cdn.jsdelivr.net/gh/lichess-org/lila@master/public/piece/cburnett/bP.svg" alt="Black Pawn" draggable="false"></div>
-      <div class="square dark"><img class="piece black" src="https://cdn.jsdelivr.net/gh/lichess-org/lila@master/public/piece/cburnett/bP.svg" alt="Black Pawn" draggable="false"></div>
-      <div class="square light"><img class="piece black" src="https://cdn.jsdelivr.net/gh/lichess-org/lila@master/public/piece/cburnett/bP.svg" alt="Black Pawn" draggable="false"></div>
-      <div class="square dark"><img class="piece black" src="https://cdn.jsdelivr.net/gh/lichess-org/lila@master/public/piece/cburnett/bP.svg" alt="Black Pawn" draggable="false"></div>
-      <div class="square light"><img class="piece black" src="https://cdn.jsdelivr.net/gh/lichess-org/lila@master/public/piece/cburnett/bP.svg" alt="Black Pawn" draggable="false"><span class="coords rank">7</span></div>
-
-      <div class="square light"></div><div class="square dark"></div><div class="square light"></div><div class="square dark"></div>
-      <div class="square light"></div><div class="square dark"></div><div class="square light"></div><div class="square dark"></div>
-      <div class="square dark"></div><div class="square light"></div><div class="square dark"></div><div class="square light"></div>
-      <div class="square dark"></div><div class="square light"></div><div class="square dark"></div><div class="square light"></div>
-
-      <div class="square light"></div><div class="square dark"></div><div class="square light"></div><div class="square dark"></div>
-      <div class="square light"></div><div class="square dark"></div><div class="square light"></div><div class="square dark"></div>
-
-      <div class="square dark"></div><div class="square light"></div><div class="square dark"></div><div class="square light"></div>
-      <div class="square dark"></div><div class="square light"></div><div class="square dark"></div><div class="square light"></div>
-
-      <div class="square light"><img class="piece white" src="https://cdn.jsdelivr.net/gh/lichess-org/lila@master/public/piece/cburnett/wP.svg" alt="White Pawn" draggable="false"><span class="coords rank">2</span></div>
-      <div class="square dark"><img class="piece white" src="https://cdn.jsdelivr.net/gh/lichess-org/lila@master/public/piece/cburnett/wP.svg" alt="White Pawn" draggable="false"></div>
-      <div class="square light"><img class="piece white" src="https://cdn.jsdelivr.net/gh/lichess-org/lila@master/public/piece/cburnett/wP.svg" alt="White Pawn" draggable="false"></div>
-      <div class="square dark"><img class="piece white" src="https://cdn.jsdelivr.net/gh/lichess-org/lila@master/public/piece/cburnett/wP.svg" alt="White Pawn" draggable="false"></div>
-      <div class="square light"><img class="piece white" src="https://cdn.jsdelivr.net/gh/lichess-org/lila@master/public/piece/cburnett/wP.svg" alt="White Pawn" draggable="false"></div>
-      <div class="square dark"><img class="piece white" src="https://cdn.jsdelivr.net/gh/lichess-org/lila@master/public/piece/cburnett/wP.svg" alt="White Pawn" draggable="false"></div>
-      <div class="square light"><img class="piece white" src="https://cdn.jsdelivr.net/gh/lichess-org/lila@master/public/piece/cburnett/wP.svg" alt="White Pawn" draggable="false"></div>
-      <div class="square dark"><img class="piece white" src="https://cdn.jsdelivr.net/gh/lichess-org/lila@master/public/piece/cburnett/wP.svg" alt="White Pawn" draggable="false"><span class="coords rank">2</span></div>
-
-      <div class="square dark"><img class="piece white" src="https://cdn.jsdelivr.net/gh/lichess-org/lila@master/public/piece/cburnett/wR.svg" alt="White Rook" draggable="false"><span class="coords">a</span><span class="coords file">1</span></div>
-      <div class="square light"><img class="piece white" src="https://cdn.jsdelivr.net/gh/lichess-org/lila@master/public/piece/cburnett/wN.svg" alt="White Knight" draggable="false"><span class="coords file">2</span></div>
-      <div class="square dark"><img class="piece white" src="https://cdn.jsdelivr.net/gh/lichess-org/lila@master/public/piece/cburnett/wB.svg" alt="White Bishop" draggable="false"><span class="coords file">3</span></div>
-      <div class="square light"><img class="piece white" src="https://cdn.jsdelivr.net/gh/lichess-org/lila@master/public/piece/cburnett/wQ.svg" alt="White Queen" draggable="false"><span class="coords file">4</span></div>
-      <div class="square dark"><img class="piece white" src="https://cdn.jsdelivr.net/gh/lichess-org/lila@master/public/piece/cburnett/wK.svg" alt="White King" draggable="false"><span class="coords file">5</span></div>
-      <div class="square light"><img class="piece white" src="https://cdn.jsdelivr.net/gh/lichess-org/lila@master/public/piece/cburnett/wB.svg" alt="White Bishop" draggable="false"><span class="coords file">6</span></div>
-      <div class="square dark"><img class="piece white" src="https://cdn.jsdelivr.net/gh/lichess-org/lila@master/public/piece/cburnett/wN.svg" alt="White Knight" draggable="false"><span class="coords file">7</span></div>
-      <div class="square light"><img class="piece white" src="https://cdn.jsdelivr.net/gh/lichess-org/lila@master/public/piece/cburnett/wR.svg" alt="White Rook" draggable="false"><span class="coords file">8</span></div>
-    </div>
-    <div class="board-caption"><b>64 squares.</b><small>Infinite possibilities.</small></div>
-  </div>
+  <div class="stats"><div><b>64</b><span>Squares</span></div><div><b>10</b><span>Tools</span></div><div><b>∞</b><span>Chess</span></div></div>
+ </div>
+ <div class="scroll">Explore</div>
 </section>
 
-<section class="tools" id="tools">
-  <div class="section-head">
-    <h2>Chess Tools</h2>
-    <p>Choose your next move.</p>
-  </div>
-  <div class="grid">
-    <a class="card featured" href="https://vpsinhachess.github.io/playnow/" target="_blank" rel="noopener">
-      <div><div class="icon"><span class="tool-symbol" aria-hidden="true">▶</span><span class="tool-symbol-label">Play</span></div><h3>Play Now</h3><p>Jump into a game instantly.</p></div><span class="go">Play</span>
-    </a>
-    <a class="card" href="https://vpsinhachess.github.io/clock/" target="_blank" rel="noopener">
-      <div><div class="icon"><span class="tool-symbol" aria-hidden="true">◷</span><span class="tool-symbol-label">Timer</span></div><h3>Chess Clock</h3><p>Two-player game timer.</p></div><span class="go">Start</span>
-    </a>
-    <a class="card" href="https://vpsinhachess.github.io/board/" target="_blank" rel="noopener">
-      <div><div class="icon"><span class="tool-symbol" aria-hidden="true">▦</span><span class="tool-symbol-label">Board</span></div><h3>Board</h3><p>Move pieces on a digital board.</p></div><span class="go">Open</span>
-    </a>
-    <a class="card" href="https://vpsinhachess.github.io/mychess64/" target="_blank" rel="noopener">
-      <div><div class="icon"><span class="tool-symbol" aria-hidden="true">◆</span><span class="tool-symbol-label">App</span></div><h3>MyChess64 App</h3><p>The main MyChess64 experience.</p></div><span class="go">Open</span>
-    </a>
-    <a class="card" href="https://vpsinhachess.github.io/opening-tree/" target="_blank" rel="noopener">
-      <div><div class="icon"><span class="tool-symbol" aria-hidden="true">⌘</span><span class="tool-symbol-label">Opening</span></div><h3>Opening Tree</h3><p>Explore openings move by move.</p></div><span class="go">Study</span>
-    </a>
-    <a class="card" href="https://vpsinhachess.github.io/chess-pieces/" target="_blank" rel="noopener">
-      <div><div class="icon"><span class="tool-symbol" aria-hidden="true">♟</span><span class="tool-symbol-label">Pieces</span></div><h3>Chess Pieces</h3><p>Learn how each piece moves.</p></div><span class="go">Learn</span>
-    </a>
-    <a class="card" href="https://vpsinhachess.github.io/board-setup/" target="_blank" rel="noopener">
-      <div><div class="icon"><span class="tool-symbol" aria-hidden="true">⚙</span><span class="tool-symbol-label">Setup</span></div><h3>Board Setup</h3><p>Build the perfect starting position.</p></div><span class="go">Set up</span>
-    </a>
-    <a class="card" href="https://vpsinhachess.github.io/find-squares/" target="_blank" rel="noopener">
-      <div><div class="icon"><span class="tool-symbol" aria-hidden="true">⌖</span><span class="tool-symbol-label">Find</span></div><h3>Find Squares</h3><p>Train your square recognition.</p></div><span class="go">Train</span>
-    </a>
-    <a class="card" href="https://vpsinhachess.github.io/name-squares/" target="_blank" rel="noopener">
-      <div><div class="icon"><span class="tool-symbol" aria-hidden="true">A</span><span class="tool-symbol-label">Name</span></div><h3>Name Squares</h3><p>Build fast board vision.</p></div><span class="go">Train</span>
-    </a>
-    <a class="card" href="https://vpsinhachess.github.io/student-tracker/" target="_blank" rel="noopener">
-      <div><div class="icon"><span class="tool-symbol" aria-hidden="true">▤</span><span class="tool-symbol-label">Track</span></div><h3>Student Tracker</h3><p>Follow student progress.</p></div><span class="go">Track</span>
-    </a>
-  </div>
+<section class="dashboard" id="play">
+ <div class="intro"><h2>Choose your chess.</h2><p>Three paths. One chess home.</p></div>
+ <div class="categories">
+    <section class="category play" id="play">
+      <div class="cat-head">
+        <div><span class="cat-number">01</span><h2>PLAY</h2></div>
+        <p>Play your way.</p>
+      </div>
+      <div class="tools"><a class="tool" href="https://vpsinhachess.github.io/playnow/"><span class="tool-icon" aria-hidden="true">▶</span><span class="tool-text"><b>Play Now</b><small>Start a game</small></span><span class="arrow">↗</span></a>
+<a class="tool" href="https://vpsinhachess.github.io/mychess64/"><span class="tool-icon" aria-hidden="true">♟</span><span class="tool-text"><b>Play Online</b><small>Play with friends</small></span><span class="arrow">↗</span></a>
+<a class="tool" href="https://vpsinhachess.github.io/clock/"><span class="tool-icon" aria-hidden="true">◷</span><span class="tool-text"><b>Chess Clock</b><small>Play with time</small></span><span class="arrow">↗</span></a>
+</div>
+    </section>
+    <section class="category learn" id="learn">
+      <div class="cat-head">
+        <div><span class="cat-number">02</span><h2>LEARN</h2></div>
+        <p>Build your chess skills.</p>
+      </div>
+      <div class="tools"><a class="tool" href="https://vpsinhachess.github.io/chess-pieces/"><span class="tool-icon" aria-hidden="true">♞</span><span class="tool-text"><b>Chess Pieces</b><small>Know the pieces</small></span><span class="arrow">↗</span></a>
+<a class="tool" href="https://vpsinhachess.github.io/find-squares/"><span class="tool-icon" aria-hidden="true">⌖</span><span class="tool-text"><b>Find Squares</b><small>Train board vision</small></span><span class="arrow">↗</span></a>
+<a class="tool" href="https://vpsinhachess.github.io/name-squares/"><span class="tool-icon" aria-hidden="true">A</span><span class="tool-text"><b>Name Squares</b><small>Master coordinates</small></span><span class="arrow">↗</span></a>
+<a class="tool" href="https://vpsinhachess.github.io/board-setup/"><span class="tool-icon" aria-hidden="true">⚙</span><span class="tool-text"><b>Board Setup</b><small>Create positions</small></span><span class="arrow">↗</span></a>
+</div>
+    </section>
+    <section class="category teach" id="teach">
+      <div class="cat-head">
+        <div><span class="cat-number">03</span><h2>TEACH</h2></div>
+        <p>Build better learners.</p>
+      </div>
+      <div class="tools"><a class="tool" href="https://vpsinhachess.github.io/opening-tree/"><span class="tool-icon" aria-hidden="true">♜</span><span class="tool-text"><b>Opening Tree</b><small>Explore openings</small></span><span class="arrow">↗</span></a>
+<a class="tool" href="https://vpsinhachess.github.io/student-tracker/"><span class="tool-icon" aria-hidden="true">▤</span><span class="tool-text"><b>Student Tracker</b><small>Track progress</small></span><span class="arrow">↗</span></a>
+<a class="tool" href="https://vpsinhachess.github.io/board/"><span class="tool-icon" aria-hidden="true">▦</span><span class="tool-text"><b>Training Board</b><small>Open the board</small></span><span class="arrow">↗</span></a>
+</div>
+    </section></div>
+ <div class="quote">
+  <div><strong>Play. Learn. Teach.</strong><span>Everything MyChess64, brought together in one place.</span></div>
+  <a href="https://vpsinhachess.github.io/mychess64/">PLAY ONLINE →</a>
+ </div>
 </section>
 </main>
 
-<footer>
-  <span><b>MyChess64</b> · Learn. Play. Improve.</span>
-  <span>Anytime, Anywhere. ♟</span>
-</footer>
+<footer class="footer"><span>MyChess64</span><span>Play · Learn · Teach</span></footer>
+</div>
 </body>
 </html>
